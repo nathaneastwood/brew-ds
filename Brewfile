@@ -3,7 +3,7 @@ tap 'homebrew/bundle'
 tap 'homebrew/core'
 tap 'homebrew/science'
 brew 'gdal'
-brew 'gite
+brew 'git'
 brew 'markdown'
 brew 'openssl'
 brew 'pandoc'
