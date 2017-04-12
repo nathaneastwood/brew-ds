@@ -3,13 +3,18 @@
 # Install brew, use brew to install system files and then use R and python
 # package managers to install their recommended packages/modules
 
+install_brew () {
+  /usr/bin/ruby -e "$(curl -fsSL "`
+    `"https://raw.githubusercontent.com/Homebrew/install/master/install)"
+}
+
 ## check internet connection
 wget -q --tries=3 --timeout=5 --spider http://google.com
 if [[ $? -eq 0 ]]; then
   echo "* Installing software"
-  alias install_brew=/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+ 
 
-  ## Make sure your PATH variable is as we expect, and it knows where brew lives
+  ## Make sure your PATH variable is as we expect
   echo "export PATH=/usr/local/bin:/usr/local/sbin:$PATH" > ~/.profile
   source ~/.profile
 
