@@ -3,4 +3,4 @@
 # Install from Brewfile
 brew bundle
 # Install common R packages
-Rscript -e "install.packages(c('tidyverse', 'rmarkdown', 'shiny'))"
+Rscript -e "install.packages(c('tidyverse', 'rmarkdown', 'shiny', 'mlr'))"
