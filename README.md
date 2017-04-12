@@ -7,6 +7,8 @@ brew-ds aims to set up your MacOS or linux system with common Data Science tools
 ## Usage
 
 ```bash
+git clone git@github.com:nathaneastwood/brew-ds.git
+cd brew-ds
 . build.sh
 ```
 You may be prompted for your password.
