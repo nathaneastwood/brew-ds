@@ -1,0 +1,9 @@
+pandas
+seaborn
+bokeh
+numpy
+scipy
+statsmodels
+scikit-learn
+virtualenv
+jedi
