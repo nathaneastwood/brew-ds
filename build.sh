@@ -6,13 +6,6 @@
 install_brew () {
   /usr/bin/ruby -e "$(curl -fsSL "`
     `"https://raw.githubusercontent.com/Homebrew/install/master/install)"
-}
-
-## check internet connection
-wget -q --tries=3 --timeout=5 --spider http://google.com
-if [[ $? -eq 0 ]]; then
-  echo "* Installing software"
- 
 
   ## Make sure your PATH variable is as we expect
   echo "export PATH=/usr/local/bin:/usr/local/sbin:$PATH" > ~/.profile
@@ -20,8 +13,14 @@ if [[ $? -eq 0 ]]; then
 
   ## Refresh your command index
   hash -r
+}
 
-  ## check to see if it already exists, if it does skip installation
+## check internet connection
+wget -q --tries=3 --timeout=5 --spider http://google.com
+if [[ $? -eq 0 ]]; then
+  echo "* Installing software"
+
+  ## check to see if brew already exists, if it does skip installation
   command -v brew >/dev/null && echo "* brew exists, skipping" || install_brew
 
   # Install from Brewfile
