@@ -23,7 +23,8 @@ if [[ $? -eq 0 ]]; then
   brew bundle 1>install.log
 
   # Install common R packages
-  Rscript "install.packages(c('tidyverse', 'rmarkdown', 'shiny'))" 1>install.log
+  Rscript "install.packages(c('tidyverse', 'rmarkdown', 'shiny', 'mlr'), "`
+  `"repos = 'https://cloud.r-project.org/')" 1>install.log
 
   # Install common python modules
   pip3 install -r requirements.txt 1>install.log
