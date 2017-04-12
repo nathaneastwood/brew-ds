@@ -16,7 +16,7 @@ install_brew () {
 }
 
 ## check internet connection
-wget -q --tries=3 --timeout=5 --spider http://google.com
+curl -D- -o /dev/null -s http://www.google.com
 if [[ $? -eq 0 ]]; then
   echo "* Installing software"
 
