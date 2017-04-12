@@ -3,38 +3,105 @@
 # Install brew, use brew to install system files and then use R and python
 # package managers to install their recommended packages/modules
 
+
+# Function to decide on brew location by system.
+# We are going to use the defaults for brew on MacOS and linux so if you have
+# a custom setup then this needs to be edited
 install_brew () {
+  # install brew
   /usr/bin/ruby -e "$(curl -fsSL "`
     `"https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
+  
   ## Make sure your PATH variable is as we expect
-  echo "export PATH=/usr/local/bin:/usr/local/sbin:$PATH" > ~/.profile
-  source ~/.profile
+  if [[! -x ~/.profile ]]; then touch ~/.profile; fi
 
+  echo $PATH | grep -q $brew_loc || test=0 
+
+  if [[$test == 0]]; then
+    echo "export PATH=/usr/local/bin:/usr/local/sbin/$PATH"
+  fi
+    
   ## Refresh your command index
   hash -r
 }
 
-## check internet connection
-curl -D- -o /dev/null -s http://www.google.com
-if [[ $? -eq 0 ]]; then
+
+## check internet connection - writing output to /dev/null
+## we just want the exit code
+/usr/bin/env curl -D- -s http://www.google.com 1>/dev/null
+if [[ $? -eq 0 ]]; then 
   echo "* Installing software"
+
+  # figure out which OS we are on and set the expected brew location
+  case $OSTYPE in
+    darwin*)
+      brew_loc="/usr/local/bin"  
+      cat base_brew mac_brew > Brewfile
+      ;;
+    linux-gnu)
+      # set location
+      brew_loc="~/.linuxbrew/bin"
+      cp base_brew Brewfile
+      ;;  
+    *) echo "Your OS is not currently supported, exiting"; exit 1 ;;
+  esac 
+
 
   ## check to see if brew already exists, if it does skip installation
   command -v brew >/dev/null && echo "* brew exists, skipping" || install_brew
 
   # Install from Brewfile
+  echo "    -- installing brew software"
   brew bundle 1>install.log
 
+  # on linux try to install all the extra bits that we bring in from cask
+  # NOTE: I haven't tested all the package managers, some apps might not be
+  # found - please raise an issue if this is the case
+  if [[ $OSTYPE == "linux-gnu" ]]; then
+    # figure out whether we can sudo or not
+    if [[ -x "$(which sudo)" ]]; then
+      sudo -v
+      if [[ $? == 0 ]]; then
+        privs=sudo
+      else
+        privs=su -c
+      fi  
+    fi
+  
+    # figure out which package manager command to use and install the extras
+    if   [ -x "$(which apt-get)"]; then
+      cat etc/debian | xargs $privs apt-get install 
+    elif [ -x "$(which yum)" ]; then
+      cat etc/fedora | xargs $privs yum install
+    elif [ -x "$(which eopkg)" ]; then
+      cat etc/solus | xargs $privs eopkg it
+    elif [ -x "$(which pacman)" ]; then
+      cat etc/arch | xargs $privs pacman -S
+    elif [ -x "$(which emerge)" ]; then
+      cat etc/gentoo | xargs $privs emerge 
+    else
+      echo "Sorry, I forgot your package manager, please file an issue"
+      exit 2
+    fi
+  fi
+
+  rm Brewfile
+  
   # Install common R packages
-  Rscript "install.packages(c('tidyverse', 'rmarkdown', 'shiny', 'mlr'), "`
-  `"repos = 'https://cloud.r-project.org/')" 1>install.log
+  echo "    -- installing R packages"
+  Rscript -e "install.packages(c('tidyverse', 'rmarkdown', 'shiny', 'mlr'), "`
+  `"repos = 'https://cloud.r-project.org/')" 1>>install.log 2>&1
 
   # Install common python modules
-  pip3 install -r requirements.txt 1>install.log
+  echo "    -- installing python modules"
+  pip3 install -r requirements.txt 1>>install.log
 
-  echo "** Install complete"
+  echo "** Install complete \n    - for information please see install.log"
 
-else
+else # curl failed to connect to google.com
+
   echo "* There is no internet connection, exiting."
+
 fi
+

@@ -1,0 +1,4 @@
+cask 'mactex'
+cask 'r-app'
+cask 'rstudio'
+cask 'slack'
