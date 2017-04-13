@@ -19,7 +19,7 @@ install_brew () {
   echo $PATH | grep -q $brew_loc || test=0 
 
   if [[$test == 0]]; then
-    echo "export PATH=/usr/local/bin:/usr/local/sbin/$PATH"
+    echo "export PATH=$brew_loc:$PATH"
   fi
     
   ## Refresh your command index
