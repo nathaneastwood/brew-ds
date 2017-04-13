@@ -2,7 +2,7 @@
 
 > A Data Scientist is just a statistician with a Mac
 
-brew-ds aims to set up your MacOS or linux system with common Data Science tools using the package manager [brew](https://brew.sh/), R's `install.packages` and python's `pip`.
+brew-ds aims to set up your MacOS or linux system with common Data Science tools using the package manager [brew](https://brew.sh/), R's `install.packages` and python's `pip`. Linux users please see [linuxbrew](https://linuxbrew.sh).
 
 ## Usage
 
