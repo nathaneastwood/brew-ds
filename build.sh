@@ -90,8 +90,8 @@ if [[ $? -eq 0 ]]; then
 
   # Install common R packages (I work too hard, redirecting outputs...)
   echo "    -- installing R packages\n       \u25B3 this can take some time"
-  R --no-save <<'END'
-    for (package in c('tidyverse', 'rmarkdown', 'shiny', 'mlr')) {
+  Rscript -e <<'  END'
+    for (package %in% c('tidyverse', 'rmarkdown', 'shiny', 'mlr')) {
       message(paste("    \u25b3 Installing ", package))
       sink("install.log", append=TRUE)
       install.packages(package)
