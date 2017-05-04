@@ -12,17 +12,17 @@ install_brew () {
   /usr/bin/ruby -e "$(curl -fsSL "`
     `"https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-  
+
   ## Make sure your PATH variable is as we expect
   if [[! -x ~/.profile ]]; then touch ~/.profile; fi
 
-  echo $PATH | grep -q $brew_loc || test=0 
+  echo $PATH | grep -q $brew_loc || test=0
 
   if [[$test == 0]]; then
-    echo "export PATH=$brew_loc:$PATH"
+    export PATH=$brew_loc:$PATH
   fi
-    
-  ## Refresh your command index
+
+  ## Refresh your command index to make sure everything is available
   hash -r
 }
 
@@ -30,22 +30,22 @@ install_brew () {
 ## check internet connection - writing output to /dev/null
 ## we just want the exit code
 /usr/bin/env curl -D- -s http://www.google.com 1>/dev/null
-if [[ $? -eq 0 ]]; then 
+if [[ $? -eq 0 ]]; then
   echo "* Installing software"
 
   # figure out which OS we are on and set the expected brew location
   case $OSTYPE in
     darwin*)
-      brew_loc="/usr/local/bin"  
+      brew_loc="/usr/local/bin"
       cat base_brew mac_brew > Brewfile
       ;;
     linux-gnu)
       # set location
       brew_loc="~/.linuxbrew/bin"
       cp base_brew Brewfile
-      ;;  
-    *) echo "Your OS is not currently supported, exiting"; exit 1 ;;
-  esac 
+      ;;
+    *) echo "    -- Your OS is not currently supported, exiting"; exit 1 ;;
+  esac
 
 
   ## check to see if brew already exists, if it does skip installation
@@ -66,12 +66,12 @@ if [[ $? -eq 0 ]]; then
         privs=sudo
       else
         privs=su -c
-      fi  
+      fi
     fi
-  
+
     # figure out which package manager command to use and install the extras
     if   [ -x "$(which apt-get)"]; then
-      cat etc/debian | xargs $privs apt-get install 
+      cat etc/debian | xargs $privs apt-get install
     elif [ -x "$(which yum)" ]; then
       cat etc/fedora | xargs $privs yum install
     elif [ -x "$(which eopkg)" ]; then
@@ -79,7 +79,7 @@ if [[ $? -eq 0 ]]; then
     elif [ -x "$(which pacman)" ]; then
       cat etc/arch | xargs $privs pacman -S
     elif [ -x "$(which emerge)" ]; then
-      cat etc/gentoo | xargs $privs emerge 
+      cat etc/gentoo | xargs $privs emerge
     else
       echo "Sorry, I forgot your package manager, please file an issue"
       exit 2
@@ -87,11 +87,17 @@ if [[ $? -eq 0 ]]; then
   fi
 
   rm Brewfile
-  
-  # Install common R packages
-  echo "    -- installing R packages"
-  Rscript -e "install.packages(c('tidyverse', 'rmarkdown', 'shiny', 'mlr'), "`
-  `"repos = 'https://cloud.r-project.org/')" 1>>install.log 2>&1
+
+  # Install common R packages (I work too hard, redirecting outputs...)
+  echo "    -- installing R packages\n       \u25B3 this can take some time"
+  R --no-save <<'END'
+    for (package in c('tidyverse', 'rmarkdown', 'shiny', 'mlr')) {
+      message(paste("    \u25b3 Installing ", package))
+      sink("install.log", append=TRUE)
+      install.packages(package)
+      sink()
+    }
+  END
 
   # Install common python modules
   echo "    -- installing python modules"
