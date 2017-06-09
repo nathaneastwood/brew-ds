@@ -4,6 +4,8 @@
 # package managers to install their recommended packages/modules
 
 
+#-- Functions -------------------------------------------------------------------
+
 # Function to decide on brew location by system.
 # We are going to use the defaults for brew on MacOS and linux so if you have
 # a custom setup then this needs to be edited
@@ -24,6 +26,12 @@ install_brew () {
 
   ## Refresh your command index to make sure everything is available
   hash -r
+}
+
+#+WIP
+install_verbose() {
+  echo "You have chosen verbose mode but I don't work yet, sorry"
+  brew bundle 1>install.log
 }
 
 
@@ -52,8 +60,20 @@ if [[ $? -eq 0 ]]; then
   command -v brew >/dev/null && echo "* brew exists, skipping" || install_brew
 
   # Install from Brewfile
-  echo "    -- installing brew software"
-  brew bundle 1>install.log
+  echo "    -- installing brew software, this may take some time"
+
+  #+NOTE: allow a quiet mode which uses brew bundle and a verbose mode which
+  #       reels off each package individually and has a progress bar
+
+  options=':v:q'
+  while getopts $options option
+  do
+    case $option in
+        q  )    brew bundle 1>install.log;;
+        *  )    install_verbose;;
+    esac
+  done
+
 
   # on linux try to install all the extra bits that we bring in from cask
   # NOTE: I haven't tested all the package managers, some apps might not be
@@ -93,9 +113,11 @@ if [[ $? -eq 0 ]]; then
   R --no-save <<'  END'
     for (package in c('tidyverse', 'rmarkdown', 'shiny', 'mlr')) {
       message(paste("    \u25b3 Installing ", package))
-      sink("install.log", append=TRUE)
-      install.packages(package)
-      sink()
+      capture.output(
+        install.packages(package),
+        file = "install.log",
+        append = TRUE
+      )
     }
   END
 
