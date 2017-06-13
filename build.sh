@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 # Install brew, use brew to install system files and then use R and python
 # package managers to install their recommended packages/modules
@@ -30,10 +31,25 @@ install_brew () {
 
 #+WIP
 install_verbose() {
-  echo "You have chosen verbose mode but I don't work yet, sorry"
-  brew bundle 1>install.log
+  # need to know how many things are being installed
+  length=`cat Brewfile | wc -l`
+
+
+  # for each item get the row from Brewfile and install it, then echo percentage
+  for i in `seq 1 $length`
+  do
+    sed '$iq;d' Brewfile |
+      sed "s/[a-z]* '\(.*\)'/\1/"|
+      brew install 1>/dev/null
+
+    echo "            $((100 * i / length))% complete\r"
+  done
+
 }
 
+
+
+#-- Program ---------------------------------------------------------------------
 
 ## check internet connection - writing output to /dev/null
 ## we just want the exit code
@@ -112,7 +128,7 @@ if [[ $? -eq 0 ]]; then
   echo "    -- installing R packages\n       \u25B3 this can take some time"
   R --no-save <<'  END'
     for (package in c('tidyverse', 'rmarkdown', 'shiny', 'mlr')) {
-      message(paste("    \u25b3 Installing ", package))
+      message(paste("    \u25b3  gsInstalling ", package))
       capture.output(
         install.packages(package),
         file = "install.log",
