@@ -125,7 +125,7 @@ if [[ $? -eq 0 ]]; then
   rm Brewfile
 
   # Install common R packages (I work too hard, redirecting outputs...)
-  echo "    -- installing R packages\n       \u25B3 this can take some time"
+  printf "    -- installing R packages\n       \u25B3 this can take some time\n"
   R --no-save <<'  END'
     for (package in c('tidyverse', 'rmarkdown', 'shiny', 'mlr')) {
       message(paste("    \u25b3  gsInstalling ", package))
@@ -141,7 +141,7 @@ if [[ $? -eq 0 ]]; then
   echo "    -- installing python modules"
   pip3 install -r requirements.txt 1>>install.log
 
-  echo "** Install complete \n    - for information please see install.log"
+  printf "** Install complete \n    - for information please see install.log"
 
 else # curl failed to connect to google.com
 
