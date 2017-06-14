@@ -80,11 +80,9 @@ if [[ $? -eq 0 ]]; then
 
   #+NOTE: allow a quiet mode which uses brew bundle and a verbose mode which
   #       reels off each package individually and has a progress bar
-
-  options=':q'
-  while getopts $options option
+  while getopts ":q:h" option
   do
-    case $option in
+    case ${option} in
       q)  brew bundle 1>install.log;;
       h)  echo "Eventually I will be the help";;
       *)  install_verbose;;
