@@ -50,11 +50,12 @@ install_verbose() {
   # for each item get the row from Brewfile and install it, then echo percentage
   for i in `seq 1 $length`
   do
-    sed '${i}q;d' Brewfile |
-      sed "s/[a-z]* '\(.*\)'/\1/"|
-      brew install 1>/dev/null
+    brew install `
+      sed '${i}q;d' Brewfile |
+      sed "s/[a-z]* '\(.*\)'/\1/"
+    ` 1>/dev/null
 
-    printf "            $((100 * i / length))% complete\r"
+    printf "            $((100 * i / length))\% complete\r"
   done
 
 }
