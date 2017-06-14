@@ -4,6 +4,18 @@ set -e
 # Install brew, use brew to install system files and then use R and python
 # package managers to install their recommended packages/modules
 
+# Determine which mode we are to operate in
+# 
+#+NOTE: allow a quiet mode which uses brew bundle and a verbose mode which
+#       reels off each package individually and has a progress bar
+while getopts "qh" option; do
+  case ${option} in
+    q)  mode="quiet";;
+    h)  mode="help";;
+    *)  mode="verbose";;
+  esac
+done
+
 
 #-- Functions -------------------------------------------------------------------
 
@@ -51,6 +63,12 @@ install_verbose() {
 
 #-- Program ---------------------------------------------------------------------
 
+if [[ $mode == 'help' ]]; then
+  echo "Help coming soon"
+  exit 1
+fi
+
+
 ## check internet connection - writing output to /dev/null
 ## we just want the exit code
 /usr/bin/env curl -D- -s http://www.google.com 1>/dev/null
@@ -78,15 +96,11 @@ if [[ $? -eq 0 ]]; then
   # Install from Brewfile
   echo "    -- installing brew software, this may take some time"
 
-  #+NOTE: allow a quiet mode which uses brew bundle and a verbose mode which
-  #       reels off each package individually and has a progress bar
-  while getopts "qh" option; do
-    case ${option} in
-      q)  brew bundle 1>install.log;;
-      h)  echo "Eventually I will be the help";;
-      *)  install_verbose;;
-    esac
-  done
+  if [[ $mode == 'quiet' ]]; then
+    brew bundle 1>/dev/null
+  else
+    install_verbose
+  fi
 
 
   # on linux try to install all the extra bits that we bring in from cask
