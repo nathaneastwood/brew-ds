@@ -6,11 +6,18 @@
 
 ## Usage
 
+Default usage
+
 ```bash
 git clone git@github.com:nathaneastwood/brew-ds.git
 cd brew-ds
 . build.sh
 ```
+
+
+This installs in verbose mode by default. If you would like to use quiet mode and reduce output then please use the `-q` flag.
+
+
 You may be prompted for your password.
 
 
