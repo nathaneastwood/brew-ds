@@ -1,0 +1,6 @@
+language: bash
+
+before_install: 
+  - chmod +x ./build.sh
+
+install: ./build.sh
