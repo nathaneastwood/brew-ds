@@ -34,7 +34,7 @@ install_verbose() {
   # need to know how many things are being installed
   length=`cat Brewfile | wc -l`
 
-
+  echo ""
   # for each item get the row from Brewfile and install it, then echo percentage
   for i in `seq 1 $length`
   do
@@ -42,7 +42,7 @@ install_verbose() {
       sed "s/[a-z]* '\(.*\)'/\1/"|
       brew install 1>/dev/null
 
-    echo "            $((100 * i / length))% complete\r"
+    printf "            $((100 * i / length))% complete\r"
   done
 
 }
