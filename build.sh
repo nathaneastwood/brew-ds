@@ -50,7 +50,7 @@ install_verbose() {
   # for each item get the row from Brewfile and install it, then echo percentage
   for i in `seq 1 $length`
   do
-    sed '$iq;d' Brewfile |
+    sed '${i}q;d' Brewfile |
       sed "s/[a-z]* '\(.*\)'/\1/"|
       brew install 1>/dev/null
 
@@ -97,6 +97,7 @@ if [[ $? -eq 0 ]]; then
   echo "    -- installing brew software, this may take some time"
 
   if [[ $mode == 'quiet' ]]; then
+    brew tap homebrew/bundle
     brew bundle 1>/dev/null
   else
     install_verbose
