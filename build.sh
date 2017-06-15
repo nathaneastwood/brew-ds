@@ -24,16 +24,25 @@ done
 # a custom setup then this needs to be edited
 install_brew () {
   # install brew
-  /usr/bin/ruby -e "$(curl -fsSL "`
-    `"https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  case $OSTYPE in
+    darwin*)
+      /usr/bin/ruby -e "$(curl -fsSL "`
+        `"https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      ;;
+    linux-gnu)
+      ruby -e "$(curl -fsSL https://raw.githubusercontent.com/"`
+        `"Linuxbrew/install/master/install)"
+      ;;
+    *) echo "    -- Your OS is not currently supported, exiting"; exit 1 ;;
+  esac
 
 
   ## Make sure your PATH variable is as we expect
-  if [[! -x ~/.profile ]]; then touch ~/.profile; fi
+  if [[ ! -x ~/.profile ]]; then touch ~/.profile; fi
 
   echo $PATH | grep -q $brew_loc || test=0
 
-  if [[$test == 0]]; then
+  if [[ $test == 0 ]]; then
     export PATH=$brew_loc:$PATH
   fi
 
