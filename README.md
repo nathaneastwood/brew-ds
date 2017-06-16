@@ -4,7 +4,8 @@
 
 > A Data Scientist is just a statistician with a Mac
 
-`brew-ds` aims to set up your MacOS or linux system with common Data Science tools using the package manager [brew](https://brew.sh/), R's `install.packages` and python's `pip`. Linux users please see [linuxbrew](https://linuxbrew.sh).
+`brew-ds` aims to set up your MacOS system with common Data Science tools using the package manager [brew](https://brew.sh/), R's `install.packages` and python's `pip`.
+
 
 ## Usage
 
@@ -16,15 +17,11 @@ cd brew-ds
 . build.sh
 ```
 
-
 This installs in verbose mode by default. If you would like to use quiet mode and reduce output then please use the `-q` flag.
-
-
-You may be prompted for your password.
-
+You will be prompted for your password, administrator privileges are required to install some pre-requisite software (xcode command line tools).
 
 ## Warning
 
-Linux is untested but hopefully doesn't work too terribly. We have not attempted to add any PPAs, portage overlays, AUR packages etc. as you might not want them on your system.
+Linux is **deprecated**. A linux user should build a better version for their system or perhaps a group should be made for linuxbrew that does it all through that.
 
 
