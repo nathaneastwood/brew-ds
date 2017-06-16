@@ -1,7 +1,0 @@
-language: bash
-sudo: required
-
-before_install: 
-  - chmod +x ./build.sh
-
-script: ./build.sh
