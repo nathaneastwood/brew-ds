@@ -20,6 +20,24 @@ cd brew-ds
 This installs in verbose mode by default. If you would like to use quiet mode and reduce output then please use the `-q` flag.
 You will be prompted for your password, administrator privileges are required to install some pre-requisite software (xcode command line tools).
 
+## Included software
+
+* Python 3
+  - Pandas
+  - Numpy
+  - Scipy
+  - Statsmodels
+  - SciKit-Learn
+  - Bokeh
+  - Seaborn
+* R
+  - Tidyverse
+  - RMarkdown
+  - Shiny
+  - mlR
+* MacTeX
+* Slack
+
 ## Warning
 
 Linux is **deprecated**. A linux user should build a better version for their system or perhaps a group should be made for linuxbrew that does it all through that.
