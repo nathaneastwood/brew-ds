@@ -51,7 +51,7 @@ install_verbose() {
   for i in `seq 1 $length`
   do
     brew install `
-      sed '$((i))q;d' Brewfile |
+      sed "$((i))q;d" Brewfile |
       sed "s/[a-z]* '\(.*\)'/\1/"
     ` 1>/dev/null 2>>install.log
 
