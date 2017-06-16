@@ -29,10 +29,6 @@ install_brew () {
       /usr/bin/ruby -e "$(curl -fsSL "`
         `"https://raw.githubusercontent.com/Homebrew/install/master/install)"
       ;;
-    linux-gnu)
-      ruby -e "$(curl -fsSL https://raw.githubusercontent.com/"`
-        `"Linuxbrew/install/master/install)"
-      ;;
     *) echo "    -- Your OS is not currently supported, exiting"; exit 1 ;;
   esac
 
@@ -69,36 +65,19 @@ if [[ $mode == 'help' ]]; then
   exit 1
 fi
 
-
 ## check internet connection - writing output to /dev/null
 ## we just want the exit code
 /usr/bin/env curl -D- -s http://www.google.com 1>/dev/null
 if [[ $? -eq 0 ]]; then
   echo "* Installing software"
 
-  # figure out which OS we are on and set the expected brew location
-  case $OSTYPE in
-    darwin*)
-      brew_loc="/usr/local/bin"
-      cat base_brew mac_brew > Brewfile
-      ;;
-    linux-gnu)
-      # set location
-      brew_loc="~/.linuxbrew/bin"
-      cp base_brew Brewfile
-      ;;
-    *) echo "    -- Your OS is not currently supported, exiting"; exit 1 ;;
-  esac
-
   ## Make sure your PATH variable is as we expect
   if [[ ! -x ~/.profile ]]; then touch ~/.profile; fi
 
-  echo $PATH | grep -q $brew_loc || test=0
-
+  echo $PATH | grep -q "/usr/local/bin" || test=0
   if [[ $test == 0 ]]; then
     export PATH=$brew_loc:$PATH
   fi
-
 
   ## check to see if brew already exists, if it does skip installation
   command -v brew >/dev/null && echo "* brew exists, skipping" || install_brew
@@ -111,38 +90,6 @@ if [[ $? -eq 0 ]]; then
     brew bundle 1>/dev/null
   else
     install_verbose
-  fi
-
-
-  # on linux try to install all the extra bits that we bring in from cask
-  # NOTE: I haven't tested all the package managers, some apps might not be
-  # found - please raise an issue if this is the case
-  if [[ $OSTYPE == "linux-gnu" ]]; then
-    # figure out whether we can sudo or not
-    if [[ -x "$(which sudo)" ]]; then
-      sudo -v
-      if [[ $? == 0 ]]; then
-        privs=sudo
-      else
-        privs=su -c
-      fi
-    fi
-
-    # figure out which package manager command to use and install the extras
-    if   [ -x "$(which apt-get)"]; then
-      cat etc/debian | xargs $privs apt-get install
-    elif [ -x "$(which yum)" ]; then
-      cat etc/fedora | xargs $privs yum install
-    elif [ -x "$(which eopkg)" ]; then
-      cat etc/solus | xargs $privs eopkg it
-    elif [ -x "$(which pacman)" ]; then
-      cat etc/arch | xargs $privs pacman -S
-    elif [ -x "$(which emerge)" ]; then
-      cat etc/gentoo | xargs $privs emerge
-    else
-      echo "Sorry, I forgot your package manager, please file an issue"
-      exit 2
-    fi
   fi
 
   rm Brewfile
