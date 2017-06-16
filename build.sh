@@ -5,7 +5,7 @@ set -e
 # package managers to install their recommended packages/modules
 
 # Determine which mode we are to operate in
-# 
+#
 #+NOTE: allow a quiet mode which uses brew bundle and a verbose mode which
 #       reels off each package individually and has a progress bar
 while getopts "qh" option; do
@@ -36,15 +36,6 @@ install_brew () {
     *) echo "    -- Your OS is not currently supported, exiting"; exit 1 ;;
   esac
 
-
-  ## Make sure your PATH variable is as we expect
-  if [[ ! -x ~/.profile ]]; then touch ~/.profile; fi
-
-  echo $PATH | grep -q $brew_loc || test=0
-
-  if [[ $test == 0 ]]; then
-    export PATH=$brew_loc:$PATH
-  fi
 
   ## Refresh your command index to make sure everything is available
   hash -r
@@ -98,6 +89,15 @@ if [[ $? -eq 0 ]]; then
       ;;
     *) echo "    -- Your OS is not currently supported, exiting"; exit 1 ;;
   esac
+
+  ## Make sure your PATH variable is as we expect
+  if [[ ! -x ~/.profile ]]; then touch ~/.profile; fi
+
+  echo $PATH | grep -q $brew_loc || test=0
+
+  if [[ $test == 0 ]]; then
+    export PATH=$brew_loc:$PATH
+  fi
 
 
   ## check to see if brew already exists, if it does skip installation
