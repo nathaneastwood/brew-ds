@@ -1,6 +1,6 @@
 # brew-ds
 
-[![Build Status](https://travis-ci.org/nathaneastwood/brew-ds.svg?branch=master)](https://travis-ci.org/nathaneastwood/brew-ds)
+[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 
 > A Data Scientist is just a statistician with a Mac
 
