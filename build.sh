@@ -98,7 +98,7 @@ if [[ $? -eq 0 ]]; then
   printf "    -- installing R packages\n       \u25B3 this can take some time\n"
   R --no-save <<'  END'
     for (package in c('tidyverse', 'rmarkdown', 'shiny', 'mlr')) {
-      message(paste("    \u25b3  gsInstalling ", package))
+      message(paste("    \u25b3  Installing ", package))
       capture.output(
         install.packages(package),
         file = "install.log",
